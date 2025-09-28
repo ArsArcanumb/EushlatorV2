@@ -1,0 +1,8 @@
+22:
+  name: "百千の定にかわたれし剋"
+  install_path: "Game/Path/Here"
+  text_lines: 2
+  line_length: 58
+api_keys:
+  anthropic: "ANTHROPIC_API_KEY_HERE"
+  openai: "OPENAI_API_KEY_HERE"

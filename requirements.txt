@@ -1,0 +1,6 @@
+anthropic==0.68.1
+openai==1.109.1
+pylzss==0.3.8
+PyYAML==6.0.3
+tqdm==4.67.1
+transformers==4.52.3
