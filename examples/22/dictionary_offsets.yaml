@@ -1,0 +1,48 @@
+# hex addresses → *inclusive* start / end of the contiguous string table
+AFINIT:
+  start: 0x4B295          # races
+AMINIT:
+  start: 0x0DA1B          # locations
+  end:   0x0DA80
+$1$AMINIT:
+  start: 0x0DA61
+  end:   0x0DA63
+$2$AMINIT:
+  start: 0x0DA21
+  end:   0x0DA66
+CIINIT:
+  start: 0x037A3          # kingdom names
+  end:   0x037A6
+CLINIT:
+  start: 0x3F783          # class names
+$1$CLINIT:
+  start: 0x3F913
+$2$CLINIT:
+  start: 0x3F927
+CVINIT:
+  start: 0x0C0FD          # descriptors
+$1$CVINIT:
+  start: 0x0C15D
+$2$CVINIT:
+  start: 0x0C160
+EBINIT:
+  start: 0x3F387
+$1$EBINIT:
+  start: 0x3F39B
+$2$EBINIT:
+  start: 0x3F39C
+MPINIT:
+  start: 0x0D101          # map names
+$1$MPINIT:
+  start: 0x0D165
+$2$MPINIT:
+  start: 0x0D16A
+VIINIT:
+  start: 0x037CB
+  end:   0x03BB6
+$1$VIINIT:
+  start: 0x03860
+  end:   0x03862
+$2$VIINIT:
+  start: 0x037DE
+  end:   0x03867

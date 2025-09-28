@@ -259,7 +259,10 @@ def reinsert_translations(
     # Shared assets: full JP chunks per scene and PUA maps.
     full_script = load_yaml(extracted_dialogue_path / "$$full_script.yaml")
     pua_map = load_pua(utils_path / "pua.txt")
-    reverse_pua_map = _load_reverse_pua_map(utils_path / "pua.txt", utils_path / "reverse_pua.txt")
+    try:
+        reverse_pua_map = _load_reverse_pua_map(utils_path / "pua.txt", utils_path / "reverse_pua.txt")
+    except:
+        reverse_pua_map = {}
 
     # Input translations and output directory for this model run.
     translations_root = machine_translations_path / model_name

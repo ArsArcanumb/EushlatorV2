@@ -88,7 +88,7 @@ def build_llm(
 
 def main(
     game_id: int,
-    first_run: False,
+    run_type: str = "full",
     run_tag: str = "",
     provider: Provider = "anthropic",    # choose: "anthropic" | "anthropic-batch" | "openai-batch"
     model_name: Optional[str] = None,    # override model if desired
@@ -107,8 +107,12 @@ def main(
     ----------
     game_id : int
         ID used to pull the game's configuration block from config.yaml.
-    first_run : bool
-        Will only prepare the ressources for further processing.
+    run_type : str
+        Pipeline mode:
+          - "prep"      : stop after decompile (preparation only)
+          - "extract"   : stop after dialogue extract/refine
+          - "translate" : stop after corrections (before reinsertion/recompile)
+          - "full"      : run all phases
     run_tag : str
         Identifier used in output folder names (e.g., inserted/<run_tag>).
     provider : Provider
@@ -151,6 +155,10 @@ def main(
     # --- 2) Decompile game resources/scripts into 2_Decompiled
     run_decompilation(extracted_path, decompiled_path, install_path)
 
+    # --- Break here if this is the first run
+    if run_type == "prep":
+        exit(0)
+
     # If you already have edited translations, prepare them for later stages
     run_decompilation_translations(translations_path)
 
@@ -164,8 +172,7 @@ def main(
     run_extract_folder(decompiled_path, utils_path, extracted_dialogue_path)
     run_refine_dialogue(extracted_dialogue_path, extracted_dialogue_path)
 
-    # --- Break here if this is the first run
-    if first_run:
+    if run_type == "extract":
         exit(0)
 
     # --- 5) Build the LLM (provider/model configurable; api_key taken from config)
@@ -175,21 +182,25 @@ def main(
     llm_id: str = run_tag or llm_model.id
 
     # --- 6) Machine translation step into 4_MachineTranslations
-    translate(
-        extracted_dialogue_path=extracted_dialogue_path,
-        utils_path=utils_path,
-        machine_translations_path=machine_translations_path,
-        game_name=game_name,
-        llm_model=llm_model,
-        batch=batch,
-        simulate=simulate,
-    )
+    if not run_tag:
+        translate(
+            extracted_dialogue_path=extracted_dialogue_path,
+            utils_path=utils_path,
+            machine_translations_path=machine_translations_path,
+            game_name=game_name,
+            llm_model=llm_model,
+            batch=batch,
+            simulate=simulate,
+        )
 
     # --- 7) Post-translation corrections into 5_Inserted/<run_tag>
     run_corrections(
         translations_path=translations_path,
         out_path=inserted_path / llm_id
     )
+
+    if run_type == "translate":
+        exit(0)
 
     # --- 8) Reinsert translations back into decompiled assets
     reinsert_translations(
@@ -211,9 +222,9 @@ def main(
 if __name__ == "__main__":
     main(
         game_id=22,
-        first_run=False,
-        run_tag="v1.00",                         # <- your configurable version/tag
-        provider="anthropic",                    # "anthropic" | "anthropic-batch" | "openai-batch"
+        run_type="full",
+        run_tag="v1.00",                              # <- your configurable version/tag
+        provider="anthropic-batch",                    # "anthropic" | "anthropic-batch" | "openai-batch"
         model_name="claude-sonnet-4-20250514",   # or None to use defaults per provider
         simulate=False,
     )
