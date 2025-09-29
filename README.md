@@ -26,6 +26,7 @@ Features include speaker resolution via `Utils/names.yaml`, glossary injection f
 * Python **3.10+** (3.11 recommended)
 * Windows (for the provided decompiler `.exe`)
 * `git` (optional, if cloning)
+* The actual game (Installed, Full official patch + Appends, without any unofficial translation patches in the install folder!)
 
 ## Python Environment
 
@@ -43,6 +44,8 @@ pip install -r requirements.txt
 ## Decompiler (setup & build)
 
 1. **Fetch the sources**
+
+We are using Kelebek1's decompiler for the important De- and Recompile steps.
 
 ```bash
 cd eushlator/repositories
@@ -388,3 +391,25 @@ if __name__ == "__main__":
   ```
 * Need extra name fixes? Add to `Utils/manual_replacements_dict.yaml`
   (proper nouns / titles only—avoid common words).
+
+
+# FAQ
+
+### Does this also work with other Eushully games?
+
+Probably not out of the box without heavy modifications and knowledge of the game engine and python.
+
+While I was planning on making this project modular, hence the different ID's in config.yaml, I wanted to focus on Hyakusen first and it became a bit too specific to also take the other games into consideration. 
+
+It might work up to the dialogue extraction step, or even the translation step but I'm not entirely certain. Reinsert will most certainly fail. Per game, pretty much all magic strings, such as *NAME_ADDR_MIN* and *NAME_ADDR_MAX* in character_summary.py as well as the entire code_utils.py would need to be rewritten/refactored. If you honestly plan on doing something like that and need help, let me know.
+
+
+### I just want to recomplile my own files into game files. How?
+
+If you just want to edit an already existing translation from the yaml files, you can do it like this:
+
+- After running the prep and extract steps, make sure that you have all Utils files (and existing patch files in 4ex_Translations) set up correctly.
+- Create a folder in the Eushlator/4_MachineTranslations folder of your game (Let's call it "my_translation" in this example).
+- Put the yaml files into your "my_translation" folder.
+- Edit them as you like, but the only field that matters is the "text" field in each entry. Make sure the English "text" and Japanese "input" values have the exact same amount of line breaks. It also works if not, but might cause formatting problems. Be careful with text indentation and characters like " and '. YAML is very strict with its formatting.
+- When you're done, run the program with "full" as run_type and "my_translation" as run_tag. It should now compile your own translation.
